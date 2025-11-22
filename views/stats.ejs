@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+  <div class="max-w-4xl mx-auto px-4 py-8">
+    <div class="mb-6">
+      <a href="/" class="text-blue-600 hover:underline">← Back to Dashboard</a>
+    </div>
+
+    <% if (error) { %>
+      <div class="bg-white rounded-lg shadow p-8 text-center">
+        <h1 class="text-2xl font-bold text-red-600 mb-2">Link Not Found</h1>
+        <p class="text-gray-600">The link you're looking for doesn't exist.</p>
+      </div>
+    <% } else { %>
+      <div class="bg-white rounded-lg shadow p-6">
+        <h1 class="text-2xl font-bold text-gray-900 mb-6">Link Statistics</h1>
+
+        <div class="space-y-4">
+          <div class="border-b pb-4">
+            <label class="text-sm font-medium text-gray-500">Short Code</label>
+            <div class="text-lg font-mono font-semibold text-blue-600 mt-1">
+              <%= link.code %>
+            </div>
+          </div>
+
+          <div class="border-b pb-4">
+            <label class="text-sm font-medium text-gray-500">Short URL</label>
+            <div class="text-lg font-mono mt-1 break-all">
+              <a href="<%= baseUrl %>/<%= link.code %>" class="text-blue-600 hover:underline" target="_blank">
+                <%= baseUrl %>/<%= link.code %>
+              </a>
+            </div>
+          </div>
+
+          <div class="border-b pb-4">
+            <label class="text-sm font-medium text-gray-500">Target URL</label>
+            <div class="text-sm mt-1 break-all">
+              <a href="<%= link.targetUrl %>" class="text-blue-600 hover:underline" target="_blank">
+                <%= link.targetUrl %>
+              </a>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div class="bg-blue-50 rounded-lg p-4">
+              <label class="text-sm font-medium text-gray-600">Total Clicks</label>
+              <div class="text-3xl font-bold text-blue-600 mt-2">
+                <%= link.totalClicks %>
+              </div>
+            </div>
+
+            <div class="bg-gray-50 rounded-lg p-4">
+              <label class="text-sm font-medium text-gray-600">Created</label>
+              <div class="text-sm text-gray-900 mt-2">
+                <%= new Date(link.createdAt).toLocaleString() %>
+              </div>
+            </div>
+          </div>
+
+          <% if (link.lastClickedAt) { %>
+          <div class="bg-gray-50 rounded-lg p-4">
+            <label class="text-sm font-medium text-gray-600">Last Clicked</label>
+            <div class="text-sm text-gray-900 mt-1">
+              <%= new Date(link.lastClickedAt).toLocaleString() %>
+            </div>
+          </div>
+          <% } else { %>
+          <div class="bg-gray-50 rounded-lg p-4 text-center">
+            <p class="text-gray-500">No clicks yet</p>
+          </div>
+          <% } %>
+        </div>
+
+        <div class="mt-6 pt-6 border-t">
+          <button onclick="deleteLink()" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">
+            Delete Link
+          </button>
+        </div>
+      </div>
+    <% } %>
+  </div>
+
+  <script>
+    async function deleteLink() {
+      const code = '<%= link ? link.code : "" %>';
+      if (!code || !confirm(`Delete link ${code}?`)) return;
+
+      try {
+        const response = await fetch(`/api/links/${code}`, { method: 'DELETE' });
+        if (response.ok) {
+          window.location.href = '/';
+        } else {
+          alert('Error deleting link');
+        }
+      } catch (error) {
+        alert('Error deleting link');
+      }
+    }
+  </script>
+</body>
+</html>

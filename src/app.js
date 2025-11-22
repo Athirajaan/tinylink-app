@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
+const expressLayouts = require('express-ejs-layouts');
 const apiRoutes = require('./routes/api');
 const webRoutes = require('./routes/web');
 const { errorHandler } = require('./middleware/errorHandler');
@@ -10,6 +11,7 @@ const app = express();
 // View engine setup
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '../views'));
+app.use(expressLayouts);
 
 // Middleware
 app.use(cors());
