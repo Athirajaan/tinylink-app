@@ -1,13 +1,12 @@
-# Dependencies
+
 node_modules/
-
-# Environment variables
 .env
-
-# Logs
-logs/
 *.log
-
-# OS / Editor files
 .DS_Store
 .vscode/
+.idea/
+*.swp
+*.swo
+dist/
+build/
+coverage/
